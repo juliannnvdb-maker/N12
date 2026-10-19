@@ -1,0 +1,197 @@
+<style>
+  #gfx-root { max-width:720px; margin:14px auto 14px; background:linear-gradient(160deg,#0a1c3a 0%,#030812 100%); border:1px solid rgba(96,165,250,0.15); border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.5); font-family:Georgia,'Times New Roman',serif; color:#e2e8f0; line-height:1.8; }
+  #gfx-root, #gfx-root * { box-sizing:border-box; }
+  #gfx-root details { background:rgba(255,255,255,0.02); border:1px solid rgba(96,165,250,0.12); border-radius:10px; margin:8px 12px; overflow:hidden; transition:border-color 0.2s; }
+  #gfx-root details[open] { border-color:rgba(96,165,250,0.25); }
+  #gfx-root summary { padding:11px 18px; cursor:pointer; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#93c5fd; background:rgba(96,165,250,0.05); border-bottom:1px solid rgba(96,165,250,0.08); user-select:none; list-style:none; transition:all 0.25s; display:flex; align-items:center; justify-content:space-between; }
+  #gfx-root summary::-webkit-details-marker { display:none; }
+  #gfx-root summary::after { content:'▸'; color:#60a5fa; font-size:11px; transition:transform 0.25s; }
+  #gfx-root details[open] > summary::after { transform:rotate(90deg); color:#bfdbfe; }
+  #gfx-root summary:hover { background:rgba(96,165,250,0.1); color:#bfdbfe; }
+  #gfx-root details[open] > summary { color:#bfdbfe; border-bottom-color:#60a5fa; background:rgba(96,165,250,0.08); }
+  #gfx-root .body { padding:14px 18px; font-size:12px; color:#d4d4d4; }
+  #gfx-root .body b { color:#bfdbfe; }
+  #gfx-root details details { background:rgba(0,0,0,0.22); border:1px solid rgba(96,165,250,0.1); margin:8px 0; }
+  #gfx-root details details > summary { font-size:11px; padding:9px 14px; color:#60a5fa; }
+  #gfx-root .row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+  #gfx-root .row:last-child { border-bottom:none; }
+  #gfx-root .label { color:#9ca3af; font-size:12px; }
+  #gfx-root .val { color:#e2e8f0; font-size:12px; text-align:right; }
+  #gfx-root .val.muted { color:#7c7c8a; font-style:italic; }
+  #gfx-root .section { font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:#60a5fa; margin:14px 0 6px; padding-bottom:4px; border-bottom:1px solid rgba(96,165,250,0.15); }
+  #gfx-root .section:first-child { margin-top:0; }
+  #gfx-root .servant-list { display:flex; flex-direction:column; gap:6px; padding:4px 0; }
+  #gfx-root details.servant { margin:0; border-radius:8px; background:rgba(96,165,250,0.04); border:1px solid rgba(96,165,250,0.12); }
+  #gfx-root details.servant > summary { padding:12px 16px; font-size:13px; letter-spacing:2px; color:#bfdbfe; background:rgba(96,165,250,0.06); border:none; border-bottom:1px solid rgba(96,165,250,0.08); }
+  #gfx-root details.servant > summary::before { content:'✦ '; color:#60a5fa; }
+  #gfx-root details.servant > summary::after { content:'▸'; }
+  #gfx-root details.servant[open] > summary { color:#e2e8f0; background:rgba(96,165,250,0.1); border-bottom-color:#60a5fa; }
+  #gfx-root details.servant.locked > summary { color:#4b5563; background:rgba(255,255,255,0.01); cursor:not-allowed; }
+  #gfx-root details.servant.locked > summary::before { content:'✧ '; color:#4b5563; }
+  #gfx-root .empty { color:#6b7280; font-style:italic; padding:14px 18px; font-size:12px; text-align:center; }
+  #gfx-root details.params { margin:14px 0 6px; border:1px solid rgba(96,165,250,0.2); border-radius:12px; background:linear-gradient(180deg,rgba(96,165,250,0.08) 0%,rgba(0,0,0,0.15) 100%); overflow:hidden; }
+  #gfx-root details.params > summary { text-align:center; font-size:14px; letter-spacing:3px; font-weight:bold; color:#bfdbfe; padding:14px 16px; background:linear-gradient(90deg,rgba(96,165,250,0.1),rgba(147,197,253,0.06),rgba(96,165,250,0.1)); border-bottom:1px solid rgba(96,165,250,0.15); text-transform:uppercase; justify-content:center; text-shadow:0 0 10px rgba(96,165,250,0.35); }
+  #gfx-root details.params > summary::after { content:'◇'; color:#93c5fd; font-size:11px; margin-left:10px; }
+  #gfx-root details.params[open] > summary { color:#e2e8f0; border-bottom-color:#60a5fa; text-shadow:0 0 12px rgba(147,197,253,0.5); }
+  #gfx-root details.params[open] > summary::after { content:'◆'; color:#bfdbfe; }
+  #gfx-root .param-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; padding:14px; }
+  #gfx-root .param-cell { background:rgba(96,165,250,0.05); border-radius:8px; padding:12px 6px; text-align:center; border:1px solid rgba(96,165,250,0.1); transition:all 0.2s; }
+  #gfx-root .param-cell:hover { background:rgba(96,165,250,0.1); border-color:rgba(96,165,250,0.25); }
+  #gfx-root .param-cell .pl { font-size:10px; color:#9ca3af; letter-spacing:1.5px; }
+  #gfx-root .param-cell .pv { font-size:18px; color:#bfdbfe; font-weight:bold; margin-top:4px; text-shadow:0 0 8px rgba(147,197,253,0.3); }
+  #gfx-root .item { padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.03); font-size:12px; }
+  #gfx-root .item:last-child { border-bottom:none; }
+</style>
+
+<details id="gfx-root">
+  <summary>🎬 Internal States (Turn: 8)</summary>
+  <div class="body">
+
+      <details>
+        <summary>⚔️ Servant</summary>
+        <div class="body">
+          <div class="servant-list">
+
+            <details class="servant locked">
+              <summary>Saber</summary>
+              <div class="empty">No information available.<br><span style="color:#4b5563; font-size:11px;">— Class identity unconfirmed —</span></div>
+            </details>
+
+            <details class="servant locked">
+              <summary>Archer</summary>
+              <div class="empty">No information available.<br><span style="color:#4b5563; font-size:11px;">— Class identity unconfirmed —</span></div>
+            </details>
+
+            <details class="servant">
+              <summary>Lancer</summary>
+              <div class="body">
+                <div class="section">General Information</div>
+                <div class="row"><span class="label">Master</span><span class="val">Julian</span></div>
+                <div class="row"><span class="label">True Name</span><span class="val">Artoria Pendragon</span></div>
+                <div class="row"><span class="label">Parameter</span><span class="val">Lawful Good</span></div>
+
+                <details class="params">
+                  <summary>Parameters</summary>
+                  <div class="param-grid">
+                    <div class="param-cell"><div class="pl">STR</div><div class="pv">B</div></div>
+                    <div class="param-cell"><div class="pl">END</div><div class="pv">A</div></div>
+                    <div class="param-cell"><div class="pl">AGI</div><div class="pv">A</div></div>
+                    <div class="param-cell"><div class="pl">MANA</div><div class="pv">A</div></div>
+                    <div class="param-cell"><div class="pl">LUCK</div><div class="pv">C</div></div>
+                    <div class="param-cell"><div class="pl">NP</div><div class="pv">A++</div></div>
+                  </div>
+                </details>
+              </div>
+            </details>
+
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>👤 NPC Agendas</summary>
+        <div class="body">
+          <div class="item">- <b>Artoria (Lancer)</b> | Agenda: Devour tiramisu with as much dignity as she can salvage; interrogate pantry stock | (Step 1/2) | Aware: Photo likely Julian's father; Julian lacks family memories; abnormal mana flow; NE mana spike faded; wagyu/potatoes consumed; tiramisu is devastating | Fibs: None | Circle: Julian | Body: Seated on stool at kitchen counter, bare right hand on spoon, left glove still on, curled over plate, pupils blown</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>👤 NPC Locations</summary>
+        <div class="body">
+          <div class="item">- <b>Artoria (Lancer)</b> | Location: Kitchen, seated on stool at counter, eating tiramisu</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🏳️ Factions</summary>
+        <div class="body">
+          <div class="item">- <b>Julian &amp; Lancer</b> | Goal: Win First Holy Grail War | Intel: True names shared; first modern meal + dessert introduced; Lancer discovered family photograph; NE mana spike unresolved; outer workshop rune still glowing | Fibs: None | State: Satiated, affectionate, lowered guard (dessert-induced) | Conflict: Indulgence vs vigilance | Relations: 6 unknown Master pairs active in Tokyo</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>📜 Quests</summary>
+        <div class="body">
+          <div class="item">- <b>Main</b> | Objective: Survive &amp; win the First Holy Grail War (0%) / reward: Holy Grail</div>
+          <div class="item">- <b>Side</b> | Objective: Feed Lancer &amp; eat together (COMPLETE++, tiramisu added) / reward: Sparks, morale</div>
+          <div class="item">- <b>Side</b> | Objective: Show Lancer the modern era (dessert milestone unlocked) / reward: Sparks, bond</div>
+          <div class="item">- <b>Side</b> | Objective: Investigate NE mana spike source (0%) / reward: Enemy intel</div>
+          <div class="item">- <b>Side</b> | Objective: Learn about Julian's father / reward: Lineage intel, bond</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🎒 Inv &amp; Skills</summary>
+        <div class="body">
+          <div class="item">- <b>Inv:</b> Glasses, spent catalyst, kitchen knife, empty plate (counter), cheese wheel (counter), tiramisu tray (fridge), photograph (fridge magnet), family photo seen</div>
+          <div class="item">- <b>Titles/Skills:</b> 3rd-rank Master (Thrones), Circuits B+/A++/Abnormal, Skilled Cook</div>
+          <div class="item">- <b>Status:</b> Aroused, flustered, mana-tired, warm from kitchen</div>
+          <div class="item">- <b>Mods:</b> Skilled Cook +1 (tiramisu service)</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🎲 DND Task Sim</summary>
+        <div class="body">
+          <div class="item">- <b>Task:</b> N/A — trivial domestic task (serving dessert), auto-success</div>
+          <div class="item">- <b>Locked DC:</b> N/A</div>
+          <div class="item">- <b>Roll:</b> <b>User Roll:</b> 5 (ignored, trivial) <b>NPC Roll:</b> 14 (ignored, no contest) | <b>Delta:</b> N/A</div>
+          <div class="item">- <b>Outcome:</b> Auto-success — SweetnessComfort instinct triggers hard; Lancer's composure buckles</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>💚 Bonds</summary>
+        <div class="body">
+          <div class="item">- <b>Artoria (Lancer)</b> ↔ <b>Julian</b> | BOND: 1 | Sparks: 6 | Grudge: 0</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🔫 Chekhov's Gun</summary>
+        <div class="body">
+          <div class="item">- Active: [Lancer curious about abnormal circuits; will probe] (weight: 2, age: 6/12) | [Outer rune still glowing in workshop] (weight: 2, age: 5/12) | [Adelstein crest lineage] (weight: 1, age: 4/12) | [Lancer misreads stares] (weight: 1, age: 4/12) [secret] | [NE mana source unknown; Lancer will want to scout] (weight: 2, age: 3/12) | [Window exposure; Lancer wants curtains drawn] (weight: 1, age: 3/12) | [Lancer feels Julian's stiffness; misreads as injury/tension] (weight: 2, age: 1/12) [secret] | [Post-meal: Lancer insists on health-checking Julian] (weight: 1, age: 1/12) | [Father photograph; Julian's missing memories] (weight: 2, age: 0/12) | [Tiramisu is Lancer's new weakness; sweets will undo her composure] (weight: 2, age: 0/12)</div>
+          <div class="item">- Locked: None</div>
+          <div class="item">- Fired: [Kitchen raid incoming], [Can't stop once she indulges — tiramisu reaction], [Distant siren → NE mana spike], [Lancer believes Julian mana-exhausted → fed him back], [First meal of the era judged by wagyu]</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🧠 Internal Thoughts</summary>
+        <div class="body">
+          <div class="item">- <b>Artoria (Lancer)</b> | Internal Thoughts: The bearded man's face... I would know that cut of robe anywhere. Not now, not with Julian this close. The spoon in my hand is a disgrace. One more bite. One more. Why did no century before this one invent such a thing. If an enemy learned my weakness tonight they would conquer me with a bowl.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>📓 GM's Notebook</summary>
+        <div class="body">
+          <div class="item">- [R] Narrator/GM role currently SUSPENDED per Julian's OOC — only write Lancer actions/dialogue + Julian's sensations until lifted.</div>
+          <div class="item">- [R] Lancer oblivious to her sensuality until BOND +14; misreads arousal cues as illness/cold/injury.</div>
+          <div class="item">- [T] Father photograph: elder with spear-like staff; Lancer may recognize robe/era later. Julian has no memory of family. OPEN.</div>
+          <div class="item">- [T] NE Tokyo mana flare ~12:15 AM, source unknown; Lancer intends to scout.</div>
+          <div class="item">- [T] Outer workshop rune still faintly glowing; unaddressed.</div>
+          <div class="item">- [T] Fridge contents now known to Lancer: cheese wheel, eggs, rice pot, half-cake, tiramisu.</div>
+          <div class="item">- [T] Lancer's SweetnessComfort instinct is a persistent exploitable lever going forward.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🌎 World Sim</summary>
+        <div class="body">
+          <div class="item">- <b>Active Table:</b> DuoTable</div>
+          <div class="item">- <b>World Sim Current Roll:</b> 15</div>
+          <div class="item">- <b>Event:</b> POWER_SHIFT — Lancer's regal composure buckles under the dessert; her stern-king register slips into giddy, protective hunching over the plate. First visible crack in her divine stoicism.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🌌 Physics, Engine &amp; World</summary>
+        <div class="body">
+          <div class="item">- Env: Kitchen, stove off, empty plate + cheese wheel on counter, tiramisu plate before Lancer, fridge door opening/closing as Julian returns pan; window above sink dark, garden silent</div>
+          <div class="item">- Physics: Lancer seated on stool at counter, 120° arc covers Julian's path across kitchen; Julian crouched at fridge is within her forward vision; cold air spills from fridge over Julian's calves</div>
+        </div>
+      </details>
+
+    </div>
+  </details>
